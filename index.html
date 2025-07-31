@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TJPR - Rumo à Aprovação</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0D6EFD">
     <link rel="apple-touch-icon" href="icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -102,7 +102,6 @@
 <body class="text-gray-800">
 
     <div id="app" class="app-container mx-auto p-4 sm:p-6 lg:p-8">
-        <!-- Tela Principal (Home) -->
         <div id="home-screen">
             <header class="text-center mb-8">
                 <h1 class="text-4xl font-bold text-gray-800">Plataforma de Estudos TJPR</h1>
@@ -113,7 +112,6 @@
                 <p class="text-gray-700 italic">"A persistência realiza o impossível."</p>
             </div>
 
-            <!-- Estatísticas do Usuário -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div class="stat-card p-4 rounded-lg text-center">
                     <h3 class="text-lg font-semibold">Questões Respondidas</h3>
@@ -130,7 +128,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card de Cronograma -->
                 <div onclick="showScreen('schedule-screen')" class="card p-6 cursor-pointer">
                     <div class="bg-blue-100 text-blue-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -138,7 +135,6 @@
                     <h2 class="text-xl font-bold mb-2">Cronograma</h2>
                     <p class="text-gray-600">Seu plano de estudos diário e automático.</p>
                 </div>
-                <!-- Card de Aulas e Questões -->
                 <div onclick="showScreen('lessons-screen')" class="card p-6 cursor-pointer">
                     <div class="bg-green-100 text-green-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
@@ -146,15 +142,13 @@
                     <h2 class="text-xl font-bold mb-2">Aulas e Questões</h2>
                     <p class="text-gray-600">Conteúdo focado e prática com filtro por matéria.</p>
                 </div>
-                <!-- Card de Redação -->
                 <div onclick="showScreen('writing-screen')" class="card p-6 cursor-pointer">
                     <div class="bg-purple-100 text-purple-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                     </div>
                     <h2 class="text-xl font-bold mb-2">Redação</h2>
                     <p class="text-gray-600">Temas prováveis e modelos para sua preparação.</p>
                 </div>
-                <!-- Card de Simulados -->
                 <div onclick="showScreen('simulados-screen')" class="card p-6 cursor-pointer">
                     <div class="bg-red-100 text-red-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -163,14 +157,13 @@
                     <p class="text-gray-600">Teste seu desempenho no formato da prova.</p>
                 </div>
             </div>
-             <div class="mt-8 text-center">
+               <div class="mt-8 text-center">
                 <button onclick="showScreen('errors-screen')" class="btn-secondary py-2 px-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     Meu Caderno de Erros
                 </button>
             </div>
         </div>
 
-        <!-- Tela do Cronograma -->
         <div id="schedule-screen" class="hide">
             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
             <h2 class="text-3xl font-bold mb-2 text-gray-800">Cronograma de Estudos Diário</h2>
@@ -185,13 +178,11 @@
                         </tr>
                     </thead>
                     <tbody id="schedule-table-body">
-                        <!-- Cronograma será inserido aqui pelo JS -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Tela de Aulas e Questões -->
         <div id="lessons-screen" class="hide">
             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
             <h2 class="text-3xl font-bold mb-6 text-gray-800">Aulas e Questões</h2>
@@ -211,9 +202,8 @@
             </div>
         </div>
         
-        <!-- Tela de Redação -->
         <div id="writing-screen" class="hide">
-             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
+               <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
             <h2 class="text-3xl font-bold mb-6 text-gray-800">Redação: Temas e Modelos</h2>
             <div class="mb-12">
                 <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Temas Prováveis para Redação</h3>
@@ -225,7 +215,6 @@
             </div>
         </div>
 
-        <!-- Tela de Simulados -->
         <div id="simulados-screen" class="hide">
             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
             <div id="simulado-start" class="text-center card p-8">
@@ -241,7 +230,7 @@
                  <div id="simulado-question-container" class="space-y-6"></div>
                  <button onclick="finishSimulado()" class="btn-primary w-full mt-8 py-3 text-lg">Finalizar e Ver Resultado</button>
             </div>
-             <div id="simulado-results" class="hide">
+              <div id="simulado-results" class="hide">
                  <h2 class="text-3xl font-bold mb-4 text-gray-800">Resultado do Simulado</h2>
                  <div class="card p-6 text-center">
                     <p class="text-lg">Sua pontuação foi:</p>
@@ -254,7 +243,6 @@
             </div>
         </div>
         
-        <!-- Tela do Caderno de Erros -->
         <div id="errors-screen" class="hide">
             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4">← Voltar</button>
             <h2 class="text-3xl font-bold mb-6 text-gray-800">Caderno de Erros</h2>
@@ -337,4 +325,397 @@
 
             { id: 13, materia: 'Informática', enunciado: 'No Excel, a função PROCV é utilizada para:', alternativas: ['Somar valores verticalmente', 'Procurar um valor em uma tabela verticalmente', 'Contar células vazias', 'Calcular a média de uma coluna'], correta: 1, correcao: 'A função PROCV (VLOOKUP em inglês) procura um valor na primeira coluna de uma tabela e retorna um valor na mesma linha de uma coluna especificada.' },
 
-            { id: 14, materia: 'Direito Processual Civil', enunciado: 'A citação por edital será feita quando:', alternativas: ['O réu for pessoa jurídica', 'O autor assim solicitar', 'O réu estiver
+            { id: 14, materia: 'Direito Processual Civil', enunciado: 'A citação por edital será feita quando:', alternativas: ['O réu for pessoa jurídica', 'O autor assim solicitar', 'O réu estiver'], correta: 2, correcao: 'A citação por edital é feita quando o réu é desconhecido ou está em local incerto, conforme o Art. 256 do CPC.'}
+        ];
+        
+        // Dados de Redação
+        const writingThemes = [
+            "Os desafios da digitalização da justiça e a inclusão social.",
+            "A importância do acesso à informação para a cidadania no contexto jurídico.",
+            "O papel do Poder Judiciário na proteção do meio ambiente.",
+            "A tecnologia como ferramenta para a celeridade processual."
+        ];
+        
+        const writingModels = [
+            {
+                tema: "O papel do Poder Judiciário na proteção do meio ambiente.",
+                modelo: "A proteção do meio ambiente, garantida como direito fundamental na Constituição Federal de 1988, exige a atuação de diversas esferas do poder público, dentre as quais o Poder Judiciário se destaca. Sua função não se restringe à mera aplicação de leis, mas abrange a interpretação de normas ambientais e a responsabilização de agentes públicos e privados por danos ecológicos, garantindo a efetividade das políticas de proteção. Por conseguinte, a jurisprudência consolidada em casos de crimes ambientais e a exigência de estudos de impacto em grandes empreendimentos reforçam o compromisso da justiça com a sustentabilidade. A atuação judicial, portanto, é essencial para equilibrar o desenvolvimento econômico com a preservação dos recursos naturais, assegurando um futuro sustentável para as próximas gerações."
+            },
+            {
+                tema: "A tecnologia como ferramenta para a celeridade processual.",
+                modelo: "A morosidade processual é um dos grandes desafios do sistema judiciário brasileiro, mas a tecnologia tem emergido como uma poderosa aliada para superá-lo. Ferramentas como o Processo Judicial Eletrônico (PJe) e sistemas de inteligência artificial otimizam tarefas repetitivas, como a triagem de processos e a análise de jurisprudência, liberando magistrados e servidores para se dedicarem a atividades mais complexas. Além disso, a digitalização dos autos e as audiências por videoconferência aumentam a acessibilidade e reduzem custos, democratizando o acesso à justiça. Conclui-se, assim, que a inovação tecnológica no Poder Judiciário é um caminho sem volta para garantir uma prestação jurisdicional mais célere, eficiente e alinhada às demandas da sociedade contemporânea."
+            }
+        ];
+        
+        // Dados de Cronograma
+        const schedule = {
+            domingo: [{ time: "09:00", activity: "Revisão Semanal", focus: "Tudo" }],
+            segunda: [{ time: "08:00", activity: "Estudo Teórico", focus: "Língua Portuguesa" }],
+            terca: [{ time: "08:00", activity: "Resolução de Questões", focus: "Raciocínio Lógico" }],
+            quarta: [{ time: "08:00", activity: "Estudo Teórico", focus: "Direito Administrativo" }],
+            quinta: [{ time: "08:00", activity: "Resolução de Questões", focus: "Informática" }],
+            sexta: [{ time: "08:00", activity: "Simulado Parcial", focus: "Matemática e Português" }],
+            sabado: [{ time: "08:00", activity: "Redação", focus: "Tema da semana" }]
+        };
+        
+        // --- FUNÇÕES DA APLICAÇÃO ---
+        
+        let userStats = {
+            totalQuestions: 0,
+            totalCorrect: 0,
+            errors: []
+        };
+        
+        let currentSimuladoQuestions = [];
+        let currentSimuladoIndex = 0;
+        let simuladoTimer = 0;
+        let simuladoInterval;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('#app > div').forEach(screen => {
+                screen.classList.add('hide');
+            });
+            document.getElementById(screenId).classList.remove('hide');
+        }
+        
+        function updateStats() {
+            const totalQuestionsEl = document.getElementById('total-questions');
+            const accuracyRateEl = document.getElementById('accuracy-rate');
+            const errorsCountEl = document.getElementById('errors-count');
+            
+            totalQuestionsEl.textContent = userStats.totalQuestions;
+            if (userStats.totalQuestions > 0) {
+                const accuracy = (userStats.totalCorrect / userStats.totalQuestions) * 100;
+                accuracyRateEl.textContent = `${accuracy.toFixed(0)}%`;
+            } else {
+                accuracyRateEl.textContent = '0%';
+            }
+            errorsCountEl.textContent = userStats.errors.length;
+        }
+        
+        function displayQuestions(filteredQuestions) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            filteredQuestions.forEach(q => {
+                const qElement = document.createElement('div');
+                qElement.className = 'card p-6';
+                qElement.innerHTML = `
+                    <h4 class="font-semibold text-lg text-gray-800 mb-4">${q.materia}</h4>
+                    <p class="mb-4">${q.enunciado}</p>
+                    <div class="space-y-2">
+                        ${q.alternativas.map((alt, index) => `
+                            <button onclick="checkAnswer(${q.id}, ${index}, this)" class="btn-secondary w-full py-2 px-4 text-left">
+                                ${alt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="mt-4 hide">
+                        <p class="font-semibold">Correção:</p>
+                        <p>${q.correcao}</p>
+                    </div>
+                `;
+                container.appendChild(qElement);
+            });
+        }
+        
+        function checkAnswer(questionId, selectedIndex, button) {
+            const question = questions.find(q => q.id === questionId);
+            userStats.totalQuestions++;
+            
+            if (selectedIndex === question.correta) {
+                userStats.totalCorrect++;
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-correct');
+            } else {
+                userStats.errors.push(question);
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-incorrect');
+                const correctButton = button.parentElement.children[question.correta];
+                correctButton.classList.remove('btn-secondary');
+                correctButton.classList.add('btn-correct');
+            }
+            
+            button.parentElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            button.parentElement.nextElementSibling.classList.remove('hide');
+            updateStats();
+            saveState();
+        }
+
+        function displayLessons() {
+            const lessonsGrid = document.getElementById('lessons-grid');
+            lessonsGrid.innerHTML = '';
+            lessons.forEach(lesson => {
+                const lessonCard = document.createElement('div');
+                lessonCard.className = 'card p-4 flex flex-col justify-between';
+                lessonCard.innerHTML = `
+                    <div>
+                        <h4 class="font-semibold text-gray-800">${lesson.title}</h4>
+                        <p class="text-sm text-gray-600">${lesson.materia}</p>
+                    </div>
+                    <button class="btn-primary mt-4 py-2 text-sm">Assistir Aula</button>
+                `;
+                lessonsGrid.appendChild(lessonCard);
+            });
+        }
+        
+        function displayWritingThemes() {
+            const themesList = document.getElementById('writing-themes');
+            themesList.innerHTML = '';
+            writingThemes.forEach(theme => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-800';
+                li.textContent = theme;
+                themesList.appendChild(li);
+            });
+            
+            const modelsContainer = document.getElementById('writing-models');
+            modelsContainer.innerHTML = '';
+            writingModels.forEach(model => {
+                const modelCard = document.createElement('div');
+                modelCard.className = 'card p-6';
+                modelCard.innerHTML = `
+                    <h4 class="text-xl font-semibold mb-2">${model.tema}</h4>
+                    <p class="text-gray-700">${model.modelo}</p>
+                `;
+                modelsContainer.appendChild(modelCard);
+            });
+        }
+        
+        function displayErrors() {
+            const errorsContainer = document.getElementById('errors-container');
+            errorsContainer.innerHTML = '';
+            if (userStats.errors.length === 0) {
+                errorsContainer.innerHTML = '<p class="text-gray-600">Nenhum erro para revisar. Continue assim!</p>';
+            } else {
+                userStats.errors.forEach((q, index) => {
+                    const qElement = document.createElement('div');
+                    qElement.className = 'card p-6';
+                    qElement.innerHTML = `
+                        <h4 class="font-semibold text-lg text-gray-800 mb-4">Erro ${index + 1}: ${q.materia}</h4>
+                        <p class="mb-4">${q.enunciado}</p>
+                        <div class="space-y-2">
+                            ${q.alternativas.map((alt, altIndex) => `
+                                <button class="btn-secondary w-full py-2 px-4 text-left ${altIndex === q.correta ? 'btn-correct' : 'btn-incorrect'}">
+                                    ${alt}
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4">
+                            <p class="font-semibold">Correção:</p>
+                            <p>${q.correcao}</p>
+                        </div>
+                    `;
+                    errorsContainer.appendChild(qElement);
+                });
+            }
+        }
+        
+        function displaySchedule() {
+            const scheduleBody = document.getElementById('schedule-table-body');
+            scheduleBody.innerHTML = '';
+            
+            const today = new Date();
+            const dayOfWeek = today.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
+            document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR');
+            
+            const scheduleForToday = schedule[dayOfWeek];
+            
+            if (scheduleForToday) {
+                scheduleForToday.forEach(block => {
+                    const row = document.createElement('tr');
+                    const currentTime = new Date();
+                    const blockTime = new Date();
+                    blockTime.setHours(parseInt(block.time.split(':')[0]), parseInt(block.time.split(':')[1]));
+                    
+                    if (currentTime > blockTime) {
+                         row.className = 'current-block'; // Apenas exemplo, precisa de lógica mais robusta
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="font-medium text-gray-700">${block.time}</td>
+                        <td>${block.activity}</td>
+                        <td>${block.focus}</td>
+                    `;
+                    scheduleBody.appendChild(row);
+                });
+            }
+        }
+        
+        function filterQuestions() {
+            const filterSelect = document.getElementById('filter-materia');
+            const selectedMateria = filterSelect.value;
+            if (selectedMateria === 'Todas') {
+                displayQuestions(questions);
+            } else {
+                const filtered = questions.filter(q => q.materia === selectedMateria);
+                displayQuestions(filtered);
+            }
+        }
+        
+        function populateFilter() {
+            const filterSelect = document.getElementById('filter-materia');
+            const materias = [...new Set(questions.map(q => q.materia))];
+            filterSelect.innerHTML = '<option value="Todas">Todas as matérias</option>';
+            materias.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m;
+                option.textContent = m;
+                filterSelect.appendChild(option);
+            });
+            filterSelect.addEventListener('change', filterQuestions);
+        }
+        
+        function startSimulado() {
+            showScreen('simulado-questions');
+            currentSimuladoQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10); // 10 questões aleatórias
+            currentSimuladoIndex = 0;
+            simuladoTimer = 0;
+            document.getElementById('simulado-timer').textContent = '00:00';
+            
+            simuladoInterval = setInterval(() => {
+                simuladoTimer++;
+                const minutes = String(Math.floor(simuladoTimer / 60)).padStart(2, '0');
+                const seconds = String(simuladoTimer % 60).padStart(2, '0');
+                document.getElementById('simulado-timer').textContent = `${minutes}:${seconds}`;
+            }, 1000);
+            
+            displaySimuladoQuestion();
+        }
+        
+        function displaySimuladoQuestion() {
+            const container = document.getElementById('simulado-question-container');
+            container.innerHTML = '';
+            const q = currentSimuladoQuestions[currentSimuladoIndex];
+            
+            const qElement = document.createElement('div');
+            qElement.className = 'card p-6';
+            qElement.innerHTML = `
+                <h4 class="font-semibold text-xl text-gray-800 mb-4">Questão ${currentSimuladoIndex + 1} de ${currentSimuladoQuestions.length}</h4>
+                <p class="mb-4">${q.enunciado}</p>
+                <div class="space-y-2">
+                    ${q.alternativas.map((alt, index) => `
+                        <button onclick="checkSimuladoAnswer(${index}, this)" class="btn-secondary w-full py-2 px-4 text-left">
+                            ${alt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(qElement);
+        }
+        
+        function checkSimuladoAnswer(selectedIndex, button) {
+            const q = currentSimuladoQuestions[currentSimuladoIndex];
+            const isCorrect = selectedIndex === q.correta;
+            q.userAnswer = selectedIndex;
+            
+            button.parentElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            
+            if (isCorrect) {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-correct');
+            } else {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-incorrect');
+                const correctButton = button.parentElement.children[q.correta];
+                correctButton.classList.remove('btn-secondary');
+                correctButton.classList.add('btn-correct');
+            }
+            
+            setTimeout(() => {
+                currentSimuladoIndex++;
+                if (currentSimuladoIndex < currentSimuladoQuestions.length) {
+                    displaySimuladoQuestion();
+                } else {
+                    finishSimulado();
+                }
+            }, 1500);
+        }
+        
+        function finishSimulado() {
+            clearInterval(simuladoInterval);
+            showScreen('simulado-results');
+            
+            let correctCount = 0;
+            currentSimuladoQuestions.forEach(q => {
+                if (q.userAnswer === q.correta) {
+                    correctCount++;
+                }
+            });
+            
+            const score = document.getElementById('simulado-score');
+            score.textContent = `${correctCount} / ${currentSimuladoQuestions.length}`;
+            
+            const feedback = document.getElementById('simulado-feedback');
+            if (correctCount >= 8) {
+                feedback.textContent = 'Excelente! Você está no caminho certo.';
+            } else if (correctCount >= 5) {
+                feedback.textContent = 'Bom resultado! Continue estudando os pontos de melhoria.';
+            } else {
+                feedback.textContent = 'Não desanime! Use os erros para focar na sua próxima sessão de estudo.';
+            }
+            
+            const errorsContainer = document.getElementById('simulado-errors-container');
+            errorsContainer.innerHTML = '';
+            currentSimuladoQuestions.forEach((q, index) => {
+                if (q.userAnswer !== q.correta) {
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'card p-4 border-l-4 border-red-500';
+                    errorElement.innerHTML = `
+                        <h4 class="font-semibold mb-2">Questão ${index + 1}: ${q.materia}</h4>
+                        <p class="text-sm">${q.enunciado}</p>
+                        <p class="text-sm mt-2"><span class="font-semibold">Correção:</span> ${q.correcao}</p>
+                    `;
+                    errorsContainer.appendChild(errorElement);
+                    userStats.errors.push(q);
+                }
+            });
+            updateStats();
+            saveState();
+        }
+
+        // Funções para salvar e carregar o estado
+        function saveState() {
+            localStorage.setItem('userStats', JSON.stringify(userStats));
+        }
+
+        function loadState() {
+            const savedStats = localStorage.getItem('userStats');
+            if (savedStats) {
+                userStats = JSON.parse(savedStats);
+            }
+            updateStats();
+        }
+
+        function getRandomQuote() {
+            const quoteEl = document.getElementById('motivational-quote').querySelector('p');
+            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            quoteEl.textContent = `"${randomQuote}"`;
+        }
+        
+        // Inicialização da aplicação
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen('home-screen');
+            getRandomQuote();
+            loadState();
+            displayLessons();
+            displayQuestions(questions);
+            displayWritingThemes();
+            displaySchedule();
+            populateFilter();
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+              .then(registration => {
+                console.log('Service Worker registrado com sucesso:', registration);
+              })
+              .catch(error => {
+                console.error('Falha ao registrar o Service Worker:', error);
+              });
+          });
+        }
+    </script>
+</body>
+</html>
