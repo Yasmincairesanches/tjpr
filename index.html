@@ -9,25 +9,42 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F8F9FA;
+            background-color: #E6F3F8; /* Azul claro para o fundo */
         }
         .hide {
             display: none;
         }
         .btn-primary {
-            background-color: #0D6EFD;
+            background-color: #0D6EFD; /* Azul primário */
             color: white;
             border-radius: 0.5rem;
             transition: background-color 0.3s;
         }
         .btn-primary:hover {
-            background-color: #0B5ED7;
+            background-color: #0B5ED7; /* Azul escuro no hover */
         }
         .nav-link {
             transition: color 0.3s;
+            color: #4B5563; /* Cinza escuro */
         }
         .nav-link:hover {
             color: #0D6EFD;
+        }
+        .card {
+            background-color: #FFFFFF; /* Fundo branco para os cards */
+            border-left: 4px solid #F0B429; /* Borda lateral amarela */
+        }
+        .pomodoro-circle {
+            width: 200px;
+            height: 200px;
+            border: 8px solid #F0B429; /* Borda amarela */
+            color: #4B5563;
+        }
+        .pomodoro-circle.work {
+            border-color: #10B981; /* Verde no foco */
+        }
+        .pomodoro-circle.break {
+            border-color: #EF4444; /* Vermelho na pausa */
         }
     </style>
 </head>
@@ -36,11 +53,12 @@
         <nav class="container mx-auto p-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800">TJPR - Rumo à Aprovação</h1>
             <ul class="flex space-x-6">
-                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('home-screen')">Início</a></li>
-                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('questoes-screen')">Questões</a></li>
-                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('simulado-screen')">Simulado</a></li>
-                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('cronograma-screen')">Cronograma</a></li>
-                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('redacao-screen')">Redação</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('home-screen')">Início</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('questoes-screen')">Questões</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('simulado-screen')">Simulado</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('cronograma-screen')">Cronograma</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('redacao-screen')">Redação</a></li>
+                <li><a href="#" class="nav-link font-semibold" onclick="showScreen('lei-seca-screen')">Lei Seca</a></li>
             </ul>
         </nav>
     </header>
@@ -51,7 +69,18 @@
             <div class="bg-white p-8 rounded-lg shadow-md text-center">
                 <h2 class="text-4xl font-extrabold mb-4 text-gray-800">Bem-vindo(a) ao seu espaço de estudos!</h2>
                 <p id="motivational-quote" class="text-xl italic text-gray-600"></p>
-                <button class="btn-primary mt-8 py-3 px-8 text-lg font-semibold" onclick="showScreen('questoes-screen')">Começar a Estudar</button>
+                
+                <div class="mt-12">
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Método Pomodoro</h3>
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <div id="pomodoro-timer-display" class="pomodoro-circle flex items-center justify-center rounded-full text-5xl font-bold work">25:00</div>
+                        <div class="flex space-x-4">
+                            <button id="pomodoro-start-btn" class="btn-primary py-2 px-6 font-semibold">Iniciar Foco</button>
+                            <button id="pomodoro-pause-btn" class="btn-primary py-2 px-6 font-semibold hide">Pausar</button>
+                            <button id="pomodoro-reset-btn" class="btn-primary py-2 px-6 font-semibold">Reiniciar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -127,6 +156,19 @@
                 </div>
             </div>
         </div>
+
+        <div id="lei-seca-screen" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Lei Seca</h2>
+                <div id="lei-seca-content" class="text-gray-700 space-y-4">
+                    <p>Aqui você pode adicionar o conteúdo das leis que precisa estudar para o concurso.</p>
+                    <h3 class="text-2xl font-semibold mt-8">Exemplo: Código de Processo Civil</h3>
+                    <p><strong>Art. 1º.</strong> O processo civil será ordenado, disciplinado e interpretado conforme os valores e as normas fundamentais estabelecidos na Constituição da República Federativa do Brasil, observando-se as disposições deste Código.</p>
+                    <p><strong>Art. 2º.</strong> O processo começa por iniciativa da parte e se desenvolve por impulso oficial, salvo as exceções previstas em lei.</p>
+                    <p>...cole aqui o restante dos artigos...</p>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -172,32 +214,48 @@
         // Para preencher o cronograma, adicione mais itens aqui
         const schedule = {
             domingo: [
-                { time: "09:00", activity: "Revisão Semanal", focus: "Todas as Matérias" },
-                { time: "11:00", activity: "Simulado Completo", focus: "Prática" }
+                { time: "09:00", activity: "Descanso Ativo", focus: "Aliviar o estresse, praticar exercícios" },
+                { time: "11:00", activity: "Leitura Livre", focus: "Notícias, artigos de jornal, livros" }
             ],
             segunda: [
-                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Processual Penal" },
-                { time: "10:00", activity: "Questões", focus: "Prisão e Liberdade Provisória" },
-                { time: "14:00", activity: "Revisão", focus: "Resumo do dia anterior" }
+                { time: "07:00", activity: "Estudo Aprofundado", focus: "Direito Penal (Parte Geral)" },
+                { time: "09:00", activity: "Resolução de Questões", focus: "100 questões de Direito Penal" },
+                { time: "11h00", activity: "Revisão da Lei Seca", focus: "Súmulas STF/STJ" },
+                { time: "12h00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13h00", activity: "Prática", focus: "Redação" }
             ],
             terca: [
-                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Administrativo" },
-                { time: "10:00", activity: "Questões", focus: "Atos Administrativos" }
+                { time: "07:00", activity: "Estudo Aprofundado", focus: "Direito Processual Civil (CPC)" },
+                { time: "09:00", activity: "Resolução de Questões", focus: "100 questões de Processo Civil" },
+                { time: "11:00", activity: "Revisão de Tema", focus: "Teoria Geral dos Recursos" },
+                { time: "12:00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13:00", activity: "Leitura da Lei Seca", focus: "Artigos do CPC" }
             ],
             quarta: [
-                { time: "08:00", activity: "Estudo Teórico", focus: "Língua Portuguesa" },
-                { time: "10:00", activity: "Questões", focus: "Concordância Verbal e Nominal" }
+                { time: "07:00", activity: "Estudo Aprofundado", focus: "Direito Administrativo (Atos)" },
+                { time: "09:00", activity: "Resolução de Questões", focus: "100 questões de Administrativo" },
+                { time: "11:00", activity: "Revisão de Tema", focus: "Estrutura da Redação" },
+                { time: "12:00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13:00", activity: "Prática de Redação", focus: "Escrever uma redação completa" }
             ],
             quinta: [
-                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Constitucional" },
-                { time: "10:00", activity: "Questões", focus: "Direitos e Garantias Fundamentais" }
+                { time: "07:00", activity: "Estudo Aprofundado", focus: "Direito Constitucional (Direitos Fundamentais)" },
+                { time: "09:00", activity: "Resolução de Questões", focus: "100 questões de Constitucional" },
+                { time: "11:00", activity: "Revisão da Lei Seca", focus: "Súmulas Vinculantes do STF" },
+                { time: "12:00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13:00", activity: "Revisão de Tópico", focus: "Poder Judiciário e TJPR" }
             ],
             sexta: [
-                { time: "08:00", activity: "Estudo Teórico", focus: "Redação" },
-                { time: "10:00", activity: "Prática", focus: "Modelo de Redação" }
+                { time: "07:00", activity: "Estudo Aprofundado", focus: "Língua Portuguesa (Sintaxe)" },
+                { time: "09:00", activity: "Resolução de Questões", focus: "100 questões de Português" },
+                { time: "11:00", activity: "Revisão Geral", focus: "Leis específicas do TJPR" },
+                { time: "12:00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13:00", activity: "Simulado Final", focus: "Fazer e corrigir um simulado completo" }
             ],
             sabado: [
-                { time: "09:00", activity: "Revisão Geral", focus: "Pontos Fracos" }
+                { time: "08:00", activity: "Simulado Completo", focus: "Simular o dia da prova com todas as matérias" },
+                { time: "12:00", activity: "Almoço", focus: "Pausa estratégica" },
+                { time: "13:00", activity: "Correção Detalhada", focus: "Analisar as questões com calma" }
             ]
         };
 
@@ -253,7 +311,7 @@
             container.innerHTML = '';
             currentQuestions.forEach(q => {
                 const questionElement = document.createElement('div');
-                questionElement.className = 'bg-gray-50 p-6 rounded-lg border';
+                questionElement.className = 'bg-white p-6 rounded-lg shadow-md card';
                 questionElement.innerHTML = `
                     <p class="text-sm text-gray-500 mb-2">${q.materia}</p>
                     <p class="text-lg font-semibold mb-4">${q.enunciado}</p>
@@ -263,7 +321,7 @@
                             <span>${alt}</span>
                         </li>`).join('')}
                     </ul>
-                    <div class="correcao-container hide mt-4 p-4 rounded-lg bg-blue-50">
+                    <div class="correcao-container hide mt-4 p-4 rounded-lg bg-blue-100 border border-blue-200">
                         <p class="font-bold text-blue-800">Resposta Correta: ${String.fromCharCode(65 + q.correta)}</p>
                         <p class="mt-2 text-blue-700">${q.correcao}</p>
                     </div>
@@ -396,7 +454,7 @@
             daysOfWeek.forEach(day => {
                 if (schedule[day]) {
                     const dayElement = document.createElement('div');
-                    dayElement.className = 'mb-6';
+                    dayElement.className = 'mb-6 card p-4 rounded-lg shadow-sm';
                     dayElement.innerHTML = `
                         <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">${day.charAt(0).toUpperCase() + day.slice(1)}</h3>
                         <ul class="space-y-2">
@@ -421,6 +479,80 @@
             temasContainer.innerHTML = writingThemes.map(tema => `<li>${tema}</li>`).join('');
             modelosContainer.innerHTML = writingModels.map(modelo => `<li>${modelo}</li>`).join('');
         }
+
+        // Lógica do Pomodoro
+        let pomodoroMode = 'work';
+        let pomodoroTime = 25 * 60;
+        let pomodoroInterval;
+        const pomodoroDisplay = document.getElementById('pomodoro-timer-display');
+        const pomodoroStartBtn = document.getElementById('pomodoro-start-btn');
+        const pomodoroPauseBtn = document.getElementById('pomodoro-pause-btn');
+        const pomodoroResetBtn = document.getElementById('pomodoro-reset-btn');
+
+        function updatePomodoroDisplay() {
+            const minutes = String(Math.floor(pomodoroTime / 60)).padStart(2, '0');
+            const seconds = String(pomodoroTime % 60).padStart(2, '0');
+            pomodoroDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function startPomodoro() {
+            pomodoroStartBtn.classList.add('hide');
+            pomodoroPauseBtn.classList.remove('hide');
+
+            pomodoroInterval = setInterval(() => {
+                pomodoroTime--;
+                updatePomodoroDisplay();
+
+                if (pomodoroTime <= 0) {
+                    clearInterval(pomodoroInterval);
+                    const audio = new Audio('notification.mp3'); // Adicione um som de notificação
+                    audio.play();
+
+                    if (pomodoroMode === 'work') {
+                        pomodoroMode = 'break';
+                        pomodoroTime = 5 * 60; // 5 minutos de pausa
+                        pomodoroDisplay.classList.remove('work');
+                        pomodoroDisplay.classList.add('break');
+                        pomodoroStartBtn.textContent = 'Iniciar Pausa';
+                        alert('Tempo de foco terminado! Agora faça uma pausa de 5 minutos.');
+                    } else {
+                        pomodoroMode = 'work';
+                        pomodoroTime = 25 * 60; // 25 minutos de foco
+                        pomodoroDisplay.classList.remove('break');
+                        pomodoroDisplay.classList.add('work');
+                        pomodoroStartBtn.textContent = 'Iniciar Foco';
+                        alert('Pausa terminada! Volte ao foco por 25 minutos.');
+                    }
+                    pomodoroStartBtn.classList.remove('hide');
+                    pomodoroPauseBtn.classList.add('hide');
+                    updatePomodoroDisplay();
+                }
+            }, 1000);
+        }
+
+        function pausePomodoro() {
+            clearInterval(pomodoroInterval);
+            pomodoroStartBtn.classList.remove('hide');
+            pomodoroPauseBtn.classList.add('hide');
+            pomodoroStartBtn.textContent = 'Continuar';
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomodoroInterval);
+            pomodoroMode = 'work';
+            pomodoroTime = 25 * 60;
+            updatePomodoroDisplay();
+            pomodoroDisplay.classList.remove('break');
+            pomodoroDisplay.classList.add('work');
+            pomodoroStartBtn.classList.remove('hide');
+            pomodoroPauseBtn.classList.add('hide');
+            pomodoroStartBtn.textContent = 'Iniciar Foco';
+        }
+
+        pomodoroStartBtn.addEventListener('click', startPomodoro);
+        pomodoroPauseBtn.addEventListener('click', pausePomodoro);
+        pomodoroResetBtn.addEventListener('click', resetPomodoro);
+
 
         // Exibe a tela inicial ao carregar
         document.addEventListener('DOMContentLoaded', () => {
