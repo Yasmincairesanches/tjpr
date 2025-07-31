@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TJPR - Rumo à Aprovação</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0D6EFD">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+        }
+        .app-container {
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #DEE2E6;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-primary {
+            background-color: #0D6EFD;
+            color: white;
+            transition: background-color 0.3s;
+            font-weight: 500;
+            border-radius: 0.5rem;
+        }
+        .btn-primary:hover {
+            background-color: #0B5ED7;
+        }
+        .btn-secondary {
+            background-color: #6C757D;
+            color: white;
+            transition: background-color 0.3s; /* ✅ Corrigido */
+            font-weight: 500;
+            border-radius: 0.5rem;
+        }
+        .btn-secondary:hover {
+            background-color: #5C636A;
+        }
+        .btn-correct {
+            background-color: #198754 !important;
+            color: white !important;
+        }
+        .btn-incorrect {
+            background-color: #DC3545 !important;
+            color: white !important;
+        }
+        .hide {
+            display: none;
+        }
+        .schedule-table th, .schedule-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+        .schedule-table tbody tr:nth-child(odd) {
+            background-color: #F8F9FA;
+        }
+        .current-block {
+            background-color: #D6EAF8 !important;
+            border-left: 4px solid #0D6EFD;
+            font-weight: 600;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #E9ECEF;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #0D6EFD;
+            transition: width 0.3s ease;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="app" class="app-container mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Tela Principal (Home) -->
+        <div id="home-screen">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-800">Plataforma de Estudos TJPR</h1>
+                <p class="text-lg text-gray-600 mt-2">Preparação Direcionada para a Banca AOCP</p>
+            </header>
+
+            <div id="motivational-quote" class="text-center mb-12 bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
+                <p class="text-gray-700 italic">"A persistência realiza o impossível."</p>
+            </div>
+
+            <!-- Estatísticas do Usuário -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="stat-card p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">Questões Respondidas</h3>
+                    <p id="total-questions" class="text-3xl font-bold">0</p>
+                </div>
+                <div class="stat-card p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">Taxa de Acerto</h3>
+                    <p id="accuracy-rate" class="text-3xl font-bold">0%</p>
+                </div>
+                <div class="stat-card p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">Erros para Revisar</h3>
+                    <p id="errors-count" class="text-3xl font-bold">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card de Cronograma -->
+                <div onclick="showScreen('schedule-screen')" class="card p-6 cursor-pointer">
+                    <div class="bg-blue-100 text-blue-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Cronograma</h2>
+                    <p class="text-gray-600">Seu plano de estudos diário e automático.</p>
+                </div>
+                <!-- Card de Aulas e Questões -->
+                <div onclick="showScreen('lessons-screen')" class="card p-6 cursor-pointer">
+                    <div class="bg-green-100 text-green-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Aulas e Questões</h2>
+                    <p class="text-gray-600">Conteúdo focado e prática com filtro por matéria.</p>
+                </div>
+                <!-- Card de Redação -->
+                <div onclick="showScreen('writing-screen')" class="card p-6 cursor-pointer">
+                    <div class="bg-purple-100 text-purple-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Redação</h2>
+                    <p class="text-gray-600">Temas prováveis e modelos para sua preparação.</p>
+                </div>
+                <!-- Card de Simulados -->
+                <div onclick="showScreen('simulados-screen')" class="card p-6 cursor-pointer">
+                    <div class="bg-red-100 text-red-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Simulados</h2>
+                    <p class="text-gray-600">Teste seu desempenho no formato da prova.</p>
+                </div>
+            </div>
+             <div class="mt-8 text-center">
+                <button onclick="showScreen('errors-screen')" class="btn-secondary py-2 px-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    Meu Caderno de Erros
+                </button>
+            </div>
+        </div>
+
+        <!-- Tela do Cronograma -->
+        <div id="schedule-screen" class="hide">
+            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
+            <h2 class="text-3xl font-bold mb-2 text-gray-800">Cronograma de Estudos Diário</h2>
+            <p id="current-date" class="text-lg text-gray-600 mb-6"></p>
+            <div class="card overflow-hidden">
+                <table id="schedule-table-container" class="w-full text-sm schedule-table">
+                    <thead class="bg-gray-100 border-b">
+                        <tr>
+                            <th class="font-semibold text-gray-700">Horário</th>
+                            <th class="font-semibold text-gray-700">Atividade</th>
+                            <th class="font-semibold text-gray-700">Matéria / Foco</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-table-body">
+                        <!-- Cronograma será inserido aqui pelo JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tela de Aulas e Questões -->
+        <div id="lessons-screen" class="hide">
+            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Aulas e Questões</h2>
+            
+            <div class="mb-12">
+                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Aulas em Vídeo</h3>
+                <div id="lessons-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Questões Comentadas</h3>
+                <div class="mb-4">
+                    <label for="filter-materia" class="block text-sm font-medium text-gray-700">Filtrar por Matéria:</label>
+                    <select id="filter-materia" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"></select>
+                </div>
+                <div id="questions-container" class="space-y-6"></div>
+            </div>
+        </div>
+        
+        <!-- Tela de Redação -->
+        <div id="writing-screen" class="hide">
+             <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Redação: Temas e Modelos</h2>
+            <div class="mb-12">
+                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Temas Prováveis para Redação</h3>
+                <ul id="writing-themes" class="list-disc list-inside space-y-3 card p-6"></ul>
+            </div>
+            <div>
+                 <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Dissertações Modelo</h3>
+                 <div id="writing-models" class="space-y-6"></div>
+            </div>
+        </div>
+
+        <!-- Tela de Simulados -->
+        <div id="simulados-screen" class="hide">
+            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
+            <div id="simulado-start" class="text-center card p-8">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Preparar Simulado</h2>
+                <p class="mb-6 text-gray-600">Crie um simulado com questões baseadas no banco disponível, seguindo a proporção de matérias do edital do TJPR.</p>
+                <button onclick="startSimulado()" class="btn-primary w-full max-w-sm mx-auto py-3 text-lg">Iniciar Simulado</button>
+            </div>
+            <div id="simulado-questions" class="hide">
+                <div class="flex justify-between items-center mb-4 card p-4">
+                    <h3 class="text-2xl font-bold">Simulado em Andamento</h3>
+                    <div id="simulado-timer" class="text-2xl font-semibold text-blue-700">00:00</div>
+                </div>
+                 <div id="simulado-question-container" class="space-y-6"></div>
+                 <button onclick="finishSimulado()" class="btn-primary w-full mt-8 py-3 text-lg">Finalizar e Ver Resultado</button>
+            </div>
+             <div id="simulado-results" class="hide">
+                 <h2 class="text-3xl font-bold mb-4 text-gray-800">Resultado do Simulado</h2>
+                 <div class="card p-6 text-center">
+                    <p class="text-lg">Sua pontuação foi:</p>
+                    <p id="simulado-score" class="text-5xl font-bold my-4"></p>
+                    <p id="simulado-feedback" class="text-gray-600 mb-6"></p>
+                    <h4 class="text-xl font-semibold mb-4">Questões Erradas:</h4>
+                    <div id="simulado-errors-container" class="space-y-4 text-left"></div>
+                     <button onclick="showScreen('home-screen')" class="btn-secondary mt-8 py-2 px-4">Voltar ao Início</button>
+                 </div>
+            </div>
+        </div>
+        
+        <!-- Tela do Caderno de Erros -->
+        <div id="errors-screen" class="hide">
+            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4">← Voltar</button>
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Caderno de Erros</h2>
+            <div id="errors-container" class="space-y-6"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- BANCO DE DADOS EXPANDIDO ---
+        const motivationalQuotes = [
+            "Acredite em você e todo o resto virá.", 
+            "O sucesso é a soma de pequenos esforços repetidos dia após dia.", 
+            "Não espere por oportunidades, crie-as.", 
+            "Sua única limitação é você mesmo.", 
+            "A jornada de mil milhas começa com um único passo.", 
+            "Quanto maior o desafio, maior a vitória.", 
+            "A disciplina é a ponte entre metas e realizações.",
+            "A persistência realiza o impossível.",
+            "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
+            "Não conte os dias, faça os dias contarem."
+        ];
+
+        const lessons = [
+            { title: 'Interpretação de Texto na AOCP', materia: 'Língua Portuguesa' }, 
+            { title: 'Crase: Regras e Exceções', materia: 'Língua Portuguesa' }, 
+            { title: 'Concordância Verbal e Nominal', materia: 'Língua Portuguesa' }, 
+            { title: 'Regência Verbal e Nominal', materia: 'Língua Portuguesa' },
+            { title: 'Pontuação e Sintaxe', materia: 'Língua Portuguesa' },
+            { title: 'Tabela-Verdade e Equivalências', materia: 'Raciocínio Lógico' }, 
+            { title: 'Lógica de Argumentação', materia: 'Raciocínio Lógico' },
+            { title: 'Sequências Lógicas', materia: 'Raciocínio Lógico' },
+            { title: 'Porcentagem e Regra de Três', materia: 'Matemática' },
+            { title: 'Equações e Sistemas', materia: 'Matemática' },
+            { title: 'Geometria Básica', materia: 'Matemática' },
+            { title: 'Segurança da Informação', materia: 'Informática' }, 
+            { title: 'Funções do Excel', materia: 'Informática' },
+            { title: 'Windows e Linux', materia: 'Informática' },
+            { title: 'Redes e Internet', materia: 'Informática' },
+            { title: 'Art. 5º da Constituição Federal', materia: 'Direito Constitucional' }, 
+            { title: 'Organização dos Poderes', materia: 'Direito Constitucional' },
+            { title: 'Direitos Fundamentais', materia: 'Direito Constitucional' },
+            { title: 'Atos Administrativos', materia: 'Direito Administrativo' }, 
+            { title: 'Lei de Licitações (14.133)', materia: 'Direito Administrativo' },
+            { title: 'Poderes Administrativos', materia: 'Direito Administrativo' },
+            { title: 'Prazos e Recursos no CPC', materia: 'Direito Processual Civil' }, 
+            { title: 'Juizados Especiais', materia: 'Direito Processual Civil' },
+            { title: 'Petição Inicial e Contestação', materia: 'Direito Processual Civil' },
+            { title: 'Inquérito Policial', materia: 'Direito Processual Penal' },
+            { title: 'Ação Penal', materia: 'Direito Processual Penal' },
+            { title: 'Crimes contra a Adm. Pública', materia: 'Direito Penal' },
+            { title: 'Teoria Geral do Crime', materia: 'Direito Penal' }
+        ];
+
+        // Banco de questões expandido
+        const questions = [
+            { id: 1, materia: 'Língua Portuguesa', enunciado: 'Assinale a alternativa em que o uso do acento grave indicativo de crase está CORRETO:', alternativas: ['Fui à uma festa ontem.', 'Ele se referiu àquilo que vimos.', 'O navio voltou a terra firme.', 'Ando a pé todos os dias.'], correta: 1, correcao: 'A crase é usada antes de pronomes demonstrativos como "aquilo". Nas outras opções: "a" antes de artigo indefinido (uma), "a" antes de palavra masculina (pé) e a expressão "terra firme" não pedem crase.' },
+            
+            { id: 2, materia: 'Raciocínio Lógico', enunciado: 'A negação da proposição "O sol é uma estrela e a lua não é um planeta" é:', alternativas: ['O sol não é uma estrela e a lua é um planeta.', 'O sol é uma estrela ou a lua é um planeta.', 'Se o sol é uma estrela, então a lua não é um planeta.', 'O sol não é uma estrela ou a lua é um planeta.'], correta: 3, correcao: 'A negação de uma proposição conjuntiva (P e Q) é a disjunção das negações (~P ou ~Q), conforme as Leis de De Morgan. Portanto, nega-se a primeira parte, troca-se "e" por "ou" e nega-se a segunda parte.' },
+            
+            { id: 3, materia: 'Direito Administrativo', enunciado: 'O atributo do ato administrativo que permite à Administração Pública executá-lo diretamente, por meios próprios, sem necessidade de intervenção do Poder Judiciário, é a:', alternativas: ['Presunção de legitimidade', 'Tipicidade', 'Autoexecutoriedade', 'Imperatividade'], correta: 2, correcao: 'A autoexecutoriedade é o atributo que confere à Administração o poder de executar suas próprias decisões, de forma coercitiva, sem precisar de autorização judicial prévia. Ex: interdição de um estabelecimento.' },
+            
+            { id: 4, materia: 'Informática', enunciado: 'Qual dos seguintes malwares é projetado para se replicar e se espalhar para outros computadores, geralmente através de uma rede?', alternativas: ['Spyware', 'Worm', 'Trojan (Cavalo de Troia)', 'Ransomware'], correta: 1, correcao: 'O Worm (verme) é um tipo de malware autônomo que se replica para se espalhar para outros computadores. Ele geralmente usa uma rede de computadores para se espalhar, dependendo de falhas de segurança no computador de destino para acessá-lo.' },
+            
+            { id: 5, materia: 'Direito Constitucional', enunciado: 'De acordo com a Constituição Federal, a competência para legislar sobre direito civil, comercial, penal e processual é:', alternativas: ['Concorrente entre União, Estados e Distrito Federal.', 'Exclusiva dos Municípios.', 'Privativa da União.', 'Comum a todos os entes da federação.'], correta: 2, correcao: 'O Art. 22 da Constituição Federal estabelece que compete privativamente à União legislar sobre direito civil, comercial, penal, processual, eleitoral, agrário, marítimo, aeronáutico, espacial e do trabalho.' },
+            
+            { id: 6, materia: 'Direito Processual Civil', enunciado: 'O prazo para a interposição do recurso de apelação, segundo o Código de Processo Civil, é de:', alternativas: ['10 dias.', '15 dias.', '20 dias.', '30 dias.'], correta: 1, correcao: 'Conforme o Art. 1.003, § 5º, do CPC, o prazo para interpor a apelação e para responder a ela é de 15 (quinze) dias.' },
+            
+            { id: 7, materia: 'Direito Penal', enunciado: 'O crime de peculato, previsto no Código Penal, consiste em:', alternativas: ['Exigir, para si ou para outrem, vantagem indevida.', 'Apropriar-se o funcionário público de dinheiro, valor ou qualquer outro bem móvel, de que tem a posse em razão do cargo.', 'Solicitar ou receber, para si ou para outrem, vantagem indevida.', 'Retardar ou deixar de praticar, indevidamente, ato de ofício.'], correta: 1, correcao: 'O peculato-apropriação, previsto no Art. 312 do Código Penal, ocorre quando o funcionário público se apropria de bem móvel, público ou particular, de que tem a posse em razão do cargo.' },
+
+            // Questões adicionais
+            { id: 8, materia: 'Língua Portuguesa', enunciado: 'Em qual alternativa há erro de concordância verbal?', alternativas: ['Fazem dois anos que me formei.', 'Houve muitos problemas na empresa.', 'Existem pessoas honestas no mundo.', 'Aconteceram fatos estranhos ontem.'], correta: 0, correcao: 'O verbo "fazer" quando indica tempo transcorrido é impessoal, ficando sempre na 3ª pessoa do singular. O correto seria "Faz dois anos que me formei".' },
+
+            { id: 9, materia: 'Matemática', enunciado: 'Se 30% de um número correspondem a 150, qual é esse número?', alternativas: ['450', '500', '550', '600'], correta: 1, correcao: 'Se 30% = 150, então 100% = x. Usando regra de três: 30/100 = 150/x → x = (150 × 100) ÷ 30 = 500.' },
+
+            { id: 10, materia: 'Raciocínio Lógico', enunciado: 'Complete a sequência: 2, 6, 12, 20, 30, ...', alternativas: ['40', '42', '44', '46'], correta: 1, correcao: 'A sequência segue o padrão: n(n+1), onde n = 1,2,3,4,5,6... Para n=6: 6×7 = 42.' },
+
+            { id: 11, materia: 'Direito Constitucional', enunciado: 'São direitos sociais previstos no art. 6º da CF/88:', alternativas: ['Educação, saúde, alimentação e moradia.', 'Vida, liberdade, igualdade e propriedade.', 'Voto, ser votado e petição.', 'Ir e vir, expressão e reunião.'], correta: 0, correcao: 'O art. 6º da CF/88 elenca os direitos sociais: educação, saúde, alimentação, trabalho, moradia, transporte, lazer, segurança, previdência social, proteção à maternidade e à infância, assistência aos desamparados.' },
+
+            { id: 12, materia: 'Direito Administrativo', enunciado: 'O princípio da eficiência foi inserido na Constituição Federal pela:', alternativas: ['EC nº 19/98', 'EC nº 20/98', 'EC nº 45/04', 'Lei nº 8.112/90'], correta: 0, correcao: 'A Emenda Constitucional nº 19/98 (Reforma Administrativa) inseriu o princípio da eficiência no art. 37, caput, da CF/88, junto aos princípios da legalidade, impessoalidade, moralidade e publicidade.' },
+
+            { id: 13, materia: 'Informática', enunciado: 'No Excel, a função PROCV é utilizada para:', alternativas: ['Somar valores verticalmente', 'Procurar um valor em uma tabela verticalmente', 'Contar células vazias', 'Calcular a média de uma coluna'], correta: 1, correcao: 'A função PROCV (VLOOKUP em inglês) procura um valor na primeira coluna de uma tabela e retorna um valor na mesma linha de uma coluna especificada.' },
+
+            { id: 14, materia: 'Direito Processual Civil', enunciado: 'A citação por edital será feita quando:', alternativas: ['O réu for pessoa jurídica', 'O autor assim solicitar', 'O réu estiver
