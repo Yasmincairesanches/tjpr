@@ -1,574 +1,295 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TJPR - Rumo à Aprovação</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0D6EFD">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F8F9FA;
         }
-        .app-container {
-            max-width: 1200px;
-        }
-        .card {
-            background-color: #FFFFFF;
-            border: 1px solid #DEE2E6;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        .hide {
+            display: none;
         }
         .btn-primary {
             background-color: #0D6EFD;
             color: white;
-            transition: background-color 0.3s;
-            font-weight: 500;
             border-radius: 0.5rem;
+            transition: background-color 0.3s;
         }
         .btn-primary:hover {
             background-color: #0B5ED7;
         }
-        .btn-secondary {
-            background-color: #6C757D;
-            color: white;
-            transition: background-color 0.3s; /* ✅ Corrigido */
-            font-weight: 500;
-            border-radius: 0.5rem;
+        .nav-link {
+            transition: color 0.3s;
         }
-        .btn-secondary:hover {
-            background-color: #5C636A;
-        }
-        .btn-correct {
-            background-color: #198754 !important;
-            color: white !important;
-        }
-        .btn-incorrect {
-            background-color: #DC3545 !important;
-            color: white !important;
-        }
-        .hide {
-            display: none;
-        }
-        .schedule-table th, .schedule-table td {
-            padding: 1rem;
-            text-align: left;
-        }
-        .schedule-table tbody tr:nth-child(odd) {
-            background-color: #F8F9FA;
-        }
-        .current-block {
-            background-color: #D6EAF8 !important;
-            border-left: 4px solid #0D6EFD;
-            font-weight: 600;
-        }
-        .progress-bar {
-            height: 8px;
-            background-color: #E9ECEF;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #0D6EFD;
-            transition: width 0.3s ease;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        @media (max-width: 768px) {
-            .app-container {
-                padding: 1rem;
-            }
-            .card {
-                margin-bottom: 1rem;
-            }
+        .nav-link:hover {
+            color: #0D6EFD;
         }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">TJPR - Rumo à Aprovação</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('home-screen')">Início</a></li>
+                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('questoes-screen')">Questões</a></li>
+                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('simulado-screen')">Simulado</a></li>
+                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('cronograma-screen')">Cronograma</a></li>
+                <li><a href="#" class="nav-link text-gray-600 font-semibold" onclick="showScreen('redacao-screen')">Redação</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <div id="app" class="app-container mx-auto p-4 sm:p-6 lg:p-8">
+    <main class="container mx-auto p-8 mt-8">
+
         <div id="home-screen">
-            <header class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-gray-800">Plataforma de Estudos TJPR</h1>
-                <p class="text-lg text-gray-600 mt-2">Preparação Direcionada para a Banca AOCP</p>
-            </header>
-
-            <div id="motivational-quote" class="text-center mb-12 bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-                <p class="text-gray-700 italic">"A persistência realiza o impossível."</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="stat-card p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">Questões Respondidas</h3>
-                    <p id="total-questions" class="text-3xl font-bold">0</p>
-                </div>
-                <div class="stat-card p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">Taxa de Acerto</h3>
-                    <p id="accuracy-rate" class="text-3xl font-bold">0%</p>
-                </div>
-                <div class="stat-card p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">Erros para Revisar</h3>
-                    <p id="errors-count" class="text-3xl font-bold">0</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="showScreen('schedule-screen')" class="card p-6 cursor-pointer">
-                    <div class="bg-blue-100 text-blue-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    </div>
-                    <h2 class="text-xl font-bold mb-2">Cronograma</h2>
-                    <p class="text-gray-600">Seu plano de estudos diário e automático.</p>
-                </div>
-                <div onclick="showScreen('lessons-screen')" class="card p-6 cursor-pointer">
-                    <div class="bg-green-100 text-green-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                    </div>
-                    <h2 class="text-xl font-bold mb-2">Aulas e Questões</h2>
-                    <p class="text-gray-600">Conteúdo focado e prática com filtro por matéria.</p>
-                </div>
-                <div onclick="showScreen('writing-screen')" class="card p-6 cursor-pointer">
-                    <div class="bg-purple-100 text-purple-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                    </div>
-                    <h2 class="text-xl font-bold mb-2">Redação</h2>
-                    <p class="text-gray-600">Temas prováveis e modelos para sua preparação.</p>
-                </div>
-                <div onclick="showScreen('simulados-screen')" class="card p-6 cursor-pointer">
-                    <div class="bg-red-100 text-red-700 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
-                    <h2 class="text-xl font-bold mb-2">Simulados</h2>
-                    <p class="text-gray-600">Teste seu desempenho no formato da prova.</p>
-                </div>
-            </div>
-               <div class="mt-8 text-center">
-                <button onclick="showScreen('errors-screen')" class="btn-secondary py-2 px-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                    Meu Caderno de Erros
-                </button>
+            <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                <h2 class="text-4xl font-extrabold mb-4 text-gray-800">Bem-vindo(a) ao seu espaço de estudos!</h2>
+                <p id="motivational-quote" class="text-xl italic text-gray-600"></p>
+                <button class="btn-primary mt-8 py-3 px-8 text-lg font-semibold" onclick="showScreen('questoes-screen')">Começar a Estudar</button>
             </div>
         </div>
 
-        <div id="schedule-screen" class="hide">
-            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
-            <h2 class="text-3xl font-bold mb-2 text-gray-800">Cronograma de Estudos Diário</h2>
-            <p id="current-date" class="text-lg text-gray-600 mb-6"></p>
-            <div class="card overflow-hidden">
-                <table id="schedule-table-container" class="w-full text-sm schedule-table">
-                    <thead class="bg-gray-100 border-b">
-                        <tr>
-                            <th class="font-semibold text-gray-700">Horário</th>
-                            <th class="font-semibold text-gray-700">Atividade</th>
-                            <th class="font-semibold text-gray-700">Matéria / Foco</th>
-                        </tr>
-                    </thead>
-                    <tbody id="schedule-table-body">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="lessons-screen" class="hide">
-            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
-            <h2 class="text-3xl font-bold mb-6 text-gray-800">Aulas e Questões</h2>
-            
-            <div class="mb-12">
-                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Aulas em Vídeo</h3>
-                <div id="lessons-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            </div>
-
-            <div>
-                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Questões Comentadas</h3>
+        <div id="questoes-screen" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Questões Comentadas</h2>
                 <div class="mb-4">
-                    <label for="filter-materia" class="block text-sm font-medium text-gray-700">Filtrar por Matéria:</label>
-                    <select id="filter-materia" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"></select>
+                    <label for="materia-select" class="block text-gray-700 font-semibold mb-2">Filtrar por Matéria:</label>
+                    <select id="materia-select" class="w-full md:w-1/2 p-2 border rounded-lg">
+                        <option value="all">Todas as Matérias</option>
+                    </select>
                 </div>
-                <div id="questions-container" class="space-y-6"></div>
-            </div>
-        </div>
-        
-        <div id="writing-screen" class="hide">
-               <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
-            <h2 class="text-3xl font-bold mb-6 text-gray-800">Redação: Temas e Modelos</h2>
-            <div class="mb-12">
-                <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Temas Prováveis para Redação</h3>
-                <ul id="writing-themes" class="list-disc list-inside space-y-3 card p-6"></ul>
-            </div>
-            <div>
-                 <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Dissertações Modelo</h3>
-                 <div id="writing-models" class="space-y-6"></div>
+                <div id="questoes-container" class="space-y-6"></div>
             </div>
         </div>
 
-        <div id="simulados-screen" class="hide">
-            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4 rounded-lg">← Voltar</button>
-            <div id="simulado-start" class="text-center card p-8">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800">Preparar Simulado</h2>
-                <p class="mb-6 text-gray-600">Crie um simulado com questões baseadas no banco disponível, seguindo a proporção de matérias do edital do TJPR.</p>
-                <button onclick="startSimulado()" class="btn-primary w-full max-w-sm mx-auto py-3 text-lg">Iniciar Simulado</button>
-            </div>
-            <div id="simulado-questions" class="hide">
-                <div class="flex justify-between items-center mb-4 card p-4">
-                    <h3 class="text-2xl font-bold">Simulado em Andamento</h3>
-                    <div id="simulado-timer" class="text-2xl font-semibold text-blue-700">00:00</div>
-                </div>
-                 <div id="simulado-question-container" class="space-y-6"></div>
-                 <button onclick="finishSimulado()" class="btn-primary w-full mt-8 py-3 text-lg">Finalizar e Ver Resultado</button>
-            </div>
-              <div id="simulado-results" class="hide">
-                 <h2 class="text-3xl font-bold mb-4 text-gray-800">Resultado do Simulado</h2>
-                 <div class="card p-6 text-center">
-                    <p class="text-lg">Sua pontuação foi:</p>
-                    <p id="simulado-score" class="text-5xl font-bold my-4"></p>
-                    <p id="simulado-feedback" class="text-gray-600 mb-6"></p>
-                    <h4 class="text-xl font-semibold mb-4">Questões Erradas:</h4>
-                    <div id="simulado-errors-container" class="space-y-4 text-left"></div>
-                     <button onclick="showScreen('home-screen')" class="btn-secondary mt-8 py-2 px-4">Voltar ao Início</button>
-                 </div>
+        <div id="simulado-screen" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Simulado do TJPR</h2>
+                <p class="text-lg text-gray-600 mb-6">Teste seus conhecimentos com 10 questões aleatórias.</p>
+                <button id="simulado-start" class="btn-primary py-3 px-8 text-lg font-semibold" onclick="startSimulado()">Fazer Simulado</button>
             </div>
         </div>
         
-        <div id="errors-screen" class="hide">
-            <button onclick="showScreen('home-screen')" class="btn-secondary mb-6 py-2 px-4">← Voltar</button>
-            <h2 class="text-3xl font-bold mb-6 text-gray-800">Caderno de Erros</h2>
-            <div id="errors-container" class="space-y-6"></div>
+        <div id="simulado-questions" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <div class="flex justify-between items-center mb-6">
+                    <span id="simulado-status" class="text-xl font-bold text-gray-800">Questão 1 de 10</span>
+                    <span id="simulado-timer" class="text-xl font-bold text-gray-800">00:00</span>
+                </div>
+                <div id="simulado-question-container"></div>
+                <div id="simulado-buttons" class="mt-8 flex justify-between">
+                    <button id="prev-simulado-btn" class="btn-primary py-2 px-6" onclick="prevSimuladoQuestion()" disabled>Anterior</button>
+                    <button id="next-simulado-btn" class="btn-primary py-2 px-6" onclick="nextSimuladoQuestion()">Próxima</button>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div id="simulado-result" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Resultado do Simulado</h2>
+                <p id="result-text" class="text-2xl font-bold mb-4"></p>
+                <p id="correct-count" class="text-lg mb-2"></p>
+                <p id="wrong-count" class="text-lg mb-4"></p>
+                <button class="btn-primary py-3 px-8 text-lg font-semibold" onclick="showScreen('simulado-screen')">Refazer Simulado</button>
+            </div>
+        </div>
+
+        <div id="cronograma-screen" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Meu Cronograma de Estudos</h2>
+                <div id="cronograma-container"></div>
+            </div>
+        </div>
+
+        <div id="redacao-screen" class="hide">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Prática de Redação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Temas de Redação</h3>
+                        <ul id="redacao-temas" class="list-disc list-inside space-y-2 text-lg"></ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Redações Modelo</h3>
+                        <ul id="redacao-modelos" class="list-disc list-inside space-y-2 text-lg"></ul>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Seu Rascunho</h3>
+                    <textarea id="essay-draft" class="w-full h-64 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escreva sua redação aqui..."></textarea>
+                    <button class="btn-primary mt-4 py-2 px-6">Salvar Rascunho</button>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // --- BANCO DE DADOS EXPANDIDO ---
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered!', reg))
+                    .catch(err => console.log('Service Worker registration failed: ', err));
+            });
+        }
+        
         const motivationalQuotes = [
             "Acredite em você e todo o resto virá.", 
             "O sucesso é a soma de pequenos esforços repetidos dia após dia.", 
-            "Não espere por oportunidades, crie-as.", 
-            "Sua única limitação é você mesmo.", 
-            "A jornada de mil milhas começa com um único passo.", 
-            "Quanto maior o desafio, maior a vitória.", 
-            "A disciplina é a ponte entre metas e realizações.",
-            "A persistência realiza o impossível.",
-            "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
-            "Não conte os dias, faça os dias contarem."
+            "você é uma fenix, voce foi forjada do fogo",
+            "A persistência é o caminho do êxito."
         ];
 
-        const lessons = [
-            { title: 'Interpretação de Texto na AOCP', materia: 'Língua Portuguesa' }, 
-            { title: 'Crase: Regras e Exceções', materia: 'Língua Portuguesa' }, 
-            { title: 'Concordância Verbal e Nominal', materia: 'Língua Portuguesa' }, 
-            { title: 'Regência Verbal e Nominal', materia: 'Língua Portuguesa' },
-            { title: 'Pontuação e Sintaxe', materia: 'Língua Portuguesa' },
-            { title: 'Tabela-Verdade e Equivalências', materia: 'Raciocínio Lógico' }, 
-            { title: 'Lógica de Argumentação', materia: 'Raciocínio Lógico' },
-            { title: 'Sequências Lógicas', materia: 'Raciocínio Lógico' },
-            { title: 'Porcentagem e Regra de Três', materia: 'Matemática' },
-            { title: 'Equações e Sistemas', materia: 'Matemática' },
-            { title: 'Geometria Básica', materia: 'Matemática' },
-            { title: 'Segurança da Informação', materia: 'Informática' }, 
-            { title: 'Funções do Excel', materia: 'Informática' },
-            { title: 'Windows e Linux', materia: 'Informática' },
-            { title: 'Redes e Internet', materia: 'Informática' },
-            { title: 'Art. 5º da Constituição Federal', materia: 'Direito Constitucional' }, 
-            { title: 'Organização dos Poderes', materia: 'Direito Constitucional' },
-            { title: 'Direitos Fundamentais', materia: 'Direito Constitucional' },
-            { title: 'Atos Administrativos', materia: 'Direito Administrativo' }, 
-            { title: 'Lei de Licitações (14.133)', materia: 'Direito Administrativo' },
-            { title: 'Poderes Administrativos', materia: 'Direito Administrativo' },
-            { title: 'Prazos e Recursos no CPC', materia: 'Direito Processual Civil' }, 
-            { title: 'Juizados Especiais', materia: 'Direito Processual Civil' },
-            { title: 'Petição Inicial e Contestação', materia: 'Direito Processual Civil' },
-            { title: 'Inquérito Policial', materia: 'Direito Processual Penal' },
-            { title: 'Ação Penal', materia: 'Direito Processual Penal' },
-            { title: 'Crimes contra a Adm. Pública', materia: 'Direito Penal' },
-            { title: 'Teoria Geral do Crime', materia: 'Direito Penal' }
-        ];
+        // ------------------ Conteúdo (Banco de Dados) ------------------
 
-        // Banco de questões expandido
+        // Para ter aulas mais completas, adicione mais perguntas e correções detalhadas.
+        // O simulado e a tela de questões usarão esses dados automaticamente.
         const questions = [
-            { id: 1, materia: 'Língua Portuguesa', enunciado: 'Assinale a alternativa em que o uso do acento grave indicativo de crase está CORRETO:', alternativas: ['Fui à uma festa ontem.', 'Ele se referiu àquilo que vimos.', 'O navio voltou a terra firme.', 'Ando a pé todos os dias.'], correta: 1, correcao: 'A crase é usada antes de pronomes demonstrativos como "aquilo". Nas outras opções: "a" antes de artigo indefinido (uma), "a" antes de palavra masculina (pé) e a expressão "terra firme" não pedem crase.' },
-            
-            { id: 2, materia: 'Raciocínio Lógico', enunciado: 'A negação da proposição "O sol é uma estrela e a lua não é um planeta" é:', alternativas: ['O sol não é uma estrela e a lua é um planeta.', 'O sol é uma estrela ou a lua é um planeta.', 'Se o sol é uma estrela, então a lua não é um planeta.', 'O sol não é uma estrela ou a lua é um planeta.'], correta: 3, correcao: 'A negação de uma proposição conjuntiva (P e Q) é a disjunção das negações (~P ou ~Q), conforme as Leis de De Morgan. Portanto, nega-se a primeira parte, troca-se "e" por "ou" e nega-se a segunda parte.' },
-            
-            { id: 3, materia: 'Direito Administrativo', enunciado: 'O atributo do ato administrativo que permite à Administração Pública executá-lo diretamente, por meios próprios, sem necessidade de intervenção do Poder Judiciário, é a:', alternativas: ['Presunção de legitimidade', 'Tipicidade', 'Autoexecutoriedade', 'Imperatividade'], correta: 2, correcao: 'A autoexecutoriedade é o atributo que confere à Administração o poder de executar suas próprias decisões, de forma coercitiva, sem precisar de autorização judicial prévia. Ex: interdição de um estabelecimento.' },
-            
-            { id: 4, materia: 'Informática', enunciado: 'Qual dos seguintes malwares é projetado para se replicar e se espalhar para outros computadores, geralmente através de uma rede?', alternativas: ['Spyware', 'Worm', 'Trojan (Cavalo de Troia)', 'Ransomware'], correta: 1, correcao: 'O Worm (verme) é um tipo de malware autônomo que se replica para se espalhar para outros computadores. Ele geralmente usa uma rede de computadores para se espalhar, dependendo de falhas de segurança no computador de destino para acessá-lo.' },
-            
-            { id: 5, materia: 'Direito Constitucional', enunciado: 'De acordo com a Constituição Federal, a competência para legislar sobre direito civil, comercial, penal e processual é:', alternativas: ['Concorrente entre União, Estados e Distrito Federal.', 'Exclusiva dos Municípios.', 'Privativa da União.', 'Comum a todos os entes da federação.'], correta: 2, correcao: 'O Art. 22 da Constituição Federal estabelece que compete privativamente à União legislar sobre direito civil, comercial, penal, processual, eleitoral, agrário, marítimo, aeronáutico, espacial e do trabalho.' },
-            
-            { id: 6, materia: 'Direito Processual Civil', enunciado: 'O prazo para a interposição do recurso de apelação, segundo o Código de Processo Civil, é de:', alternativas: ['10 dias.', '15 dias.', '20 dias.', '30 dias.'], correta: 1, correcao: 'Conforme o Art. 1.003, § 5º, do CPC, o prazo para interpor a apelação e para responder a ela é de 15 (quinze) dias.' },
-            
-            { id: 7, materia: 'Direito Penal', enunciado: 'O crime de peculato, previsto no Código Penal, consiste em:', alternativas: ['Exigir, para si ou para outrem, vantagem indevida.', 'Apropriar-se o funcionário público de dinheiro, valor ou qualquer outro bem móvel, de que tem a posse em razão do cargo.', 'Solicitar ou receber, para si ou para outrem, vantagem indevida.', 'Retardar ou deixar de praticar, indevidamente, ato de ofício.'], correta: 1, correcao: 'O peculato-apropriação, previsto no Art. 312 do Código Penal, ocorre quando o funcionário público se apropria de bem móvel, público ou particular, de que tem a posse em razão do cargo.' },
-
-            // Questões adicionais
-            { id: 8, materia: 'Língua Portuguesa', enunciado: 'Em qual alternativa há erro de concordância verbal?', alternativas: ['Fazem dois anos que me formei.', 'Houve muitos problemas na empresa.', 'Existem pessoas honestas no mundo.', 'Aconteceram fatos estranhos ontem.'], correta: 0, correcao: 'O verbo "fazer" quando indica tempo transcorrido é impessoal, ficando sempre na 3ª pessoa do singular. O correto seria "Faz dois anos que me formei".' },
-
-            { id: 9, materia: 'Matemática', enunciado: 'Se 30% de um número correspondem a 150, qual é esse número?', alternativas: ['450', '500', '550', '600'], correta: 1, correcao: 'Se 30% = 150, então 100% = x. Usando regra de três: 30/100 = 150/x → x = (150 × 100) ÷ 30 = 500.' },
-
-            { id: 10, materia: 'Raciocínio Lógico', enunciado: 'Complete a sequência: 2, 6, 12, 20, 30, ...', alternativas: ['40', '42', '44', '46'], correta: 1, correcao: 'A sequência segue o padrão: n(n+1), onde n = 1,2,3,4,5,6... Para n=6: 6×7 = 42.' },
-
-            { id: 11, materia: 'Direito Constitucional', enunciado: 'São direitos sociais previstos no art. 6º da CF/88:', alternativas: ['Educação, saúde, alimentação e moradia.', 'Vida, liberdade, igualdade e propriedade.', 'Voto, ser votado e petição.', 'Ir e vir, expressão e reunião.'], correta: 0, correcao: 'O art. 6º da CF/88 elenca os direitos sociais: educação, saúde, alimentação, trabalho, moradia, transporte, lazer, segurança, previdência social, proteção à maternidade e à infância, assistência aos desamparados.' },
-
-            { id: 12, materia: 'Direito Administrativo', enunciado: 'O princípio da eficiência foi inserido na Constituição Federal pela:', alternativas: ['EC nº 19/98', 'EC nº 20/98', 'EC nº 45/04', 'Lei nº 8.112/90'], correta: 0, correcao: 'A Emenda Constitucional nº 19/98 (Reforma Administrativa) inseriu o princípio da eficiência no art. 37, caput, da CF/88, junto aos princípios da legalidade, impessoalidade, moralidade e publicidade.' },
-
-            { id: 13, materia: 'Informática', enunciado: 'No Excel, a função PROCV é utilizada para:', alternativas: ['Somar valores verticalmente', 'Procurar um valor em uma tabela verticalmente', 'Contar células vazias', 'Calcular a média de uma coluna'], correta: 1, correcao: 'A função PROCV (VLOOKUP em inglês) procura um valor na primeira coluna de uma tabela e retorna um valor na mesma linha de uma coluna especificada.' },
-
-            { id: 14, materia: 'Direito Processual Civil', enunciado: 'A citação por edital será feita quando:', alternativas: ['O réu for pessoa jurídica', 'O autor assim solicitar', 'O réu estiver'], correta: 2, correcao: 'A citação por edital é feita quando o réu é desconhecido ou está em local incerto, conforme o Art. 256 do CPC.'}
-        ];
-        
-        // Dados de Redação
-        const writingThemes = [
-            "Os desafios da digitalização da justiça e a inclusão social.",
-            "A importância do acesso à informação para a cidadania no contexto jurídico.",
-            "O papel do Poder Judiciário na proteção do meio ambiente.",
-            "A tecnologia como ferramenta para a celeridade processual."
-        ];
-        
-        const writingModels = [
             {
-                tema: "O papel do Poder Judiciário na proteção do meio ambiente.",
-                modelo: "A proteção do meio ambiente, garantida como direito fundamental na Constituição Federal de 1988, exige a atuação de diversas esferas do poder público, dentre as quais o Poder Judiciário se destaca. Sua função não se restringe à mera aplicação de leis, mas abrange a interpretação de normas ambientais e a responsabilização de agentes públicos e privados por danos ecológicos, garantindo a efetividade das políticas de proteção. Por conseguinte, a jurisprudência consolidada em casos de crimes ambientais e a exigência de estudos de impacto em grandes empreendimentos reforçam o compromisso da justiça com a sustentabilidade. A atuação judicial, portanto, é essencial para equilibrar o desenvolvimento econômico com a preservação dos recursos naturais, assegurando um futuro sustentável para as próximas gerações."
+                id: 1,
+                materia: 'Direito Penal',
+                enunciado: 'O princípio da insignificância é aplicável nos crimes contra a administração pública?',
+                alternativas: ['Sim, em todos os casos.', 'Não, em nenhuma hipótese.', 'Sim, desde que a pena máxima do crime não exceda 2 anos.', 'Não, de acordo com o entendimento consolidado do STF.'],
+                correta: 3,
+                correcao: 'De acordo com o entendimento consolidado do Supremo Tribunal Federal (STF), o princípio da insignificância é inaplicável aos crimes contra a administração pública, pois a proteção à probidade administrativa é bem jurídico relevante, independentemente do valor da lesão.',
             },
             {
-                tema: "A tecnologia como ferramenta para a celeridade processual.",
-                modelo: "A morosidade processual é um dos grandes desafios do sistema judiciário brasileiro, mas a tecnologia tem emergido como uma poderosa aliada para superá-lo. Ferramentas como o Processo Judicial Eletrônico (PJe) e sistemas de inteligência artificial otimizam tarefas repetitivas, como a triagem de processos e a análise de jurisprudência, liberando magistrados e servidores para se dedicarem a atividades mais complexas. Além disso, a digitalização dos autos e as audiências por videoconferência aumentam a acessibilidade e reduzem custos, democratizando o acesso à justiça. Conclui-se, assim, que a inovação tecnológica no Poder Judiciário é um caminho sem volta para garantir uma prestação jurisdicional mais célere, eficiente e alinhada às demandas da sociedade contemporânea."
-            }
+                id: 2,
+                materia: 'Direito Processual Civil',
+                enunciado: 'No processo civil, a apelação, via de regra, possui efeito:',
+                alternativas: ['Suspensivo e devolutivo.', 'Somente suspensivo.', 'Somente devolutivo.', 'Nenhum dos efeitos, dependendo da decisão do juiz.'],
+                correta: 0,
+                correcao: 'O Código de Processo Civil (CPC) estabelece, em seu artigo 1.012, que a apelação terá, em regra, efeito suspensivo. Além disso, o efeito devolutivo é inerente a todos os recursos, devolvendo ao tribunal a matéria impugnada.',
+            },
         ];
-        
-        // Dados de Cronograma
+
+        // Para preencher o cronograma, adicione mais itens aqui
         const schedule = {
-            domingo: [{ time: "09:00", activity: "Revisão Semanal", focus: "Tudo" }],
-            segunda: [{ time: "08:00", activity: "Estudo Teórico", focus: "Língua Portuguesa" }],
-            terca: [{ time: "08:00", activity: "Resolução de Questões", focus: "Raciocínio Lógico" }],
-            quarta: [{ time: "08:00", activity: "Estudo Teórico", focus: "Direito Administrativo" }],
-            quinta: [{ time: "08:00", activity: "Resolução de Questões", focus: "Informática" }],
-            sexta: [{ time: "08:00", activity: "Simulado Parcial", focus: "Matemática e Português" }],
-            sabado: [{ time: "08:00", activity: "Redação", focus: "Tema da semana" }]
+            domingo: [
+                { time: "09:00", activity: "Revisão Semanal", focus: "Todas as Matérias" },
+                { time: "11:00", activity: "Simulado Completo", focus: "Prática" }
+            ],
+            segunda: [
+                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Processual Penal" },
+                { time: "10:00", activity: "Questões", focus: "Prisão e Liberdade Provisória" },
+                { time: "14:00", activity: "Revisão", focus: "Resumo do dia anterior" }
+            ],
+            terca: [
+                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Administrativo" },
+                { time: "10:00", activity: "Questões", focus: "Atos Administrativos" }
+            ],
+            quarta: [
+                { time: "08:00", activity: "Estudo Teórico", focus: "Língua Portuguesa" },
+                { time: "10:00", activity: "Questões", focus: "Concordância Verbal e Nominal" }
+            ],
+            quinta: [
+                { time: "08:00", activity: "Estudo Teórico", focus: "Direito Constitucional" },
+                { time: "10:00", activity: "Questões", focus: "Direitos e Garantias Fundamentais" }
+            ],
+            sexta: [
+                { time: "08:00", activity: "Estudo Teórico", focus: "Redação" },
+                { time: "10:00", activity: "Prática", focus: "Modelo de Redação" }
+            ],
+            sabado: [
+                { time: "09:00", activity: "Revisão Geral", focus: "Pontos Fracos" }
+            ]
         };
-        
-        // --- FUNÇÕES DA APLICAÇÃO ---
-        
-        let userStats = {
-            totalQuestions: 0,
-            totalCorrect: 0,
-            errors: []
-        };
+
+        const writingThemes = [
+            "A judicialização da saúde pública no Brasil.",
+            "O papel da inteligência artificial no sistema judiciário.",
+            "O acesso à justiça para pessoas em situação de vulnerabilidade."
+        ];
+
+        const writingModels = [
+            "Redação modelo sobre a judicialização da saúde.",
+            "Redação modelo sobre o sistema judiciário e a tecnologia."
+        ];
+
+        // ------------------ Lógica do Aplicativo ------------------
+        let currentScreen = 'home-screen';
+        let currentQuestions = [];
+
+        function showScreen(screenId) {
+            document.getElementById(currentScreen).classList.add('hide');
+            document.getElementById(screenId).classList.remove('hide');
+            currentScreen = screenId;
+            window.scrollTo(0, 0);
+
+            if (screenId === 'questoes-screen') {
+                const materiaSelect = document.getElementById('materia-select');
+                if (materiaSelect.options.length <= 1) { // Previne duplicatas
+                    const materias = [...new Set(questions.map(q => q.materia))];
+                    materias.forEach(materia => {
+                        const option = document.createElement('option');
+                        option.value = materia;
+                        option.textContent = materia;
+                        materiaSelect.appendChild(option);
+                    });
+                }
+                materiaSelect.addEventListener('change', filterQuestions);
+                filterQuestions();
+            } else if (screenId === 'cronograma-screen') {
+                displaySchedule();
+            } else if (screenId === 'redacao-screen') {
+                displayWritingContent();
+            }
+        }
+
+        function filterQuestions() {
+            const selectedMateria = document.getElementById('materia-select').value;
+            currentQuestions = selectedMateria === 'all' ? questions : questions.filter(q => q.materia === selectedMateria);
+            displayQuestions();
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questoes-container');
+            container.innerHTML = '';
+            currentQuestions.forEach(q => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'bg-gray-50 p-6 rounded-lg border';
+                questionElement.innerHTML = `
+                    <p class="text-sm text-gray-500 mb-2">${q.materia}</p>
+                    <p class="text-lg font-semibold mb-4">${q.enunciado}</p>
+                    <ul class="space-y-2 mb-4">
+                        ${q.alternativas.map((alt, index) => `<li class="flex items-center space-x-2">
+                            <span class="w-6 h-6 flex items-center justify-center border rounded-full text-sm">${String.fromCharCode(65 + index)}</span>
+                            <span>${alt}</span>
+                        </li>`).join('')}
+                    </ul>
+                    <div class="correcao-container hide mt-4 p-4 rounded-lg bg-blue-50">
+                        <p class="font-bold text-blue-800">Resposta Correta: ${String.fromCharCode(65 + q.correta)}</p>
+                        <p class="mt-2 text-blue-700">${q.correcao}</p>
+                    </div>
+                    <button class="btn-primary mt-4 py-2 px-6" onclick="showCorrecao(this)">Ver Correção</button>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+
+        function showCorrecao(button) {
+            const correcaoContainer = button.previousElementSibling;
+            correcaoContainer.classList.toggle('hide');
+            button.textContent = correcaoContainer.classList.contains('hide') ? 'Ver Correção' : 'Esconder Correção';
+        }
         
         let currentSimuladoQuestions = [];
         let currentSimuladoIndex = 0;
+        let userSimuladoAnswers = {};
         let simuladoTimer = 0;
         let simuladoInterval;
 
-        function showScreen(screenId) {
-            document.querySelectorAll('#app > div').forEach(screen => {
-                screen.classList.add('hide');
-            });
-            document.getElementById(screenId).classList.remove('hide');
-        }
-        
-        function updateStats() {
-            const totalQuestionsEl = document.getElementById('total-questions');
-            const accuracyRateEl = document.getElementById('accuracy-rate');
-            const errorsCountEl = document.getElementById('errors-count');
-            
-            totalQuestionsEl.textContent = userStats.totalQuestions;
-            if (userStats.totalQuestions > 0) {
-                const accuracy = (userStats.totalCorrect / userStats.totalQuestions) * 100;
-                accuracyRateEl.textContent = `${accuracy.toFixed(0)}%`;
-            } else {
-                accuracyRateEl.textContent = '0%';
-            }
-            errorsCountEl.textContent = userStats.errors.length;
-        }
-        
-        function displayQuestions(filteredQuestions) {
-            const container = document.getElementById('questions-container');
-            container.innerHTML = '';
-            filteredQuestions.forEach(q => {
-                const qElement = document.createElement('div');
-                qElement.className = 'card p-6';
-                qElement.innerHTML = `
-                    <h4 class="font-semibold text-lg text-gray-800 mb-4">${q.materia}</h4>
-                    <p class="mb-4">${q.enunciado}</p>
-                    <div class="space-y-2">
-                        ${q.alternativas.map((alt, index) => `
-                            <button onclick="checkAnswer(${q.id}, ${index}, this)" class="btn-secondary w-full py-2 px-4 text-left">
-                                ${alt}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div class="mt-4 hide">
-                        <p class="font-semibold">Correção:</p>
-                        <p>${q.correcao}</p>
-                    </div>
-                `;
-                container.appendChild(qElement);
-            });
-        }
-        
-        function checkAnswer(questionId, selectedIndex, button) {
-            const question = questions.find(q => q.id === questionId);
-            userStats.totalQuestions++;
-            
-            if (selectedIndex === question.correta) {
-                userStats.totalCorrect++;
-                button.classList.remove('btn-secondary');
-                button.classList.add('btn-correct');
-            } else {
-                userStats.errors.push(question);
-                button.classList.remove('btn-secondary');
-                button.classList.add('btn-incorrect');
-                const correctButton = button.parentElement.children[question.correta];
-                correctButton.classList.remove('btn-secondary');
-                correctButton.classList.add('btn-correct');
-            }
-            
-            button.parentElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
-            button.parentElement.nextElementSibling.classList.remove('hide');
-            updateStats();
-            saveState();
-        }
-
-        function displayLessons() {
-            const lessonsGrid = document.getElementById('lessons-grid');
-            lessonsGrid.innerHTML = '';
-            lessons.forEach(lesson => {
-                const lessonCard = document.createElement('div');
-                lessonCard.className = 'card p-4 flex flex-col justify-between';
-                lessonCard.innerHTML = `
-                    <div>
-                        <h4 class="font-semibold text-gray-800">${lesson.title}</h4>
-                        <p class="text-sm text-gray-600">${lesson.materia}</p>
-                    </div>
-                    <button class="btn-primary mt-4 py-2 text-sm">Assistir Aula</button>
-                `;
-                lessonsGrid.appendChild(lessonCard);
-            });
-        }
-        
-        function displayWritingThemes() {
-            const themesList = document.getElementById('writing-themes');
-            themesList.innerHTML = '';
-            writingThemes.forEach(theme => {
-                const li = document.createElement('li');
-                li.className = 'text-gray-800';
-                li.textContent = theme;
-                themesList.appendChild(li);
-            });
-            
-            const modelsContainer = document.getElementById('writing-models');
-            modelsContainer.innerHTML = '';
-            writingModels.forEach(model => {
-                const modelCard = document.createElement('div');
-                modelCard.className = 'card p-6';
-                modelCard.innerHTML = `
-                    <h4 class="text-xl font-semibold mb-2">${model.tema}</h4>
-                    <p class="text-gray-700">${model.modelo}</p>
-                `;
-                modelsContainer.appendChild(modelCard);
-            });
-        }
-        
-        function displayErrors() {
-            const errorsContainer = document.getElementById('errors-container');
-            errorsContainer.innerHTML = '';
-            if (userStats.errors.length === 0) {
-                errorsContainer.innerHTML = '<p class="text-gray-600">Nenhum erro para revisar. Continue assim!</p>';
-            } else {
-                userStats.errors.forEach((q, index) => {
-                    const qElement = document.createElement('div');
-                    qElement.className = 'card p-6';
-                    qElement.innerHTML = `
-                        <h4 class="font-semibold text-lg text-gray-800 mb-4">Erro ${index + 1}: ${q.materia}</h4>
-                        <p class="mb-4">${q.enunciado}</p>
-                        <div class="space-y-2">
-                            ${q.alternativas.map((alt, altIndex) => `
-                                <button class="btn-secondary w-full py-2 px-4 text-left ${altIndex === q.correta ? 'btn-correct' : 'btn-incorrect'}">
-                                    ${alt}
-                                </button>
-                            `).join('')}
-                        </div>
-                        <div class="mt-4">
-                            <p class="font-semibold">Correção:</p>
-                            <p>${q.correcao}</p>
-                        </div>
-                    `;
-                    errorsContainer.appendChild(qElement);
-                });
-            }
-        }
-        
-        function displaySchedule() {
-            const scheduleBody = document.getElementById('schedule-table-body');
-            scheduleBody.innerHTML = '';
-            
-            const today = new Date();
-            const dayOfWeek = today.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
-            document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR');
-            
-            const scheduleForToday = schedule[dayOfWeek];
-            
-            if (scheduleForToday) {
-                scheduleForToday.forEach(block => {
-                    const row = document.createElement('tr');
-                    const currentTime = new Date();
-                    const blockTime = new Date();
-                    blockTime.setHours(parseInt(block.time.split(':')[0]), parseInt(block.time.split(':')[1]));
-                    
-                    if (currentTime > blockTime) {
-                         row.className = 'current-block'; // Apenas exemplo, precisa de lógica mais robusta
-                    }
-                    
-                    row.innerHTML = `
-                        <td class="font-medium text-gray-700">${block.time}</td>
-                        <td>${block.activity}</td>
-                        <td>${block.focus}</td>
-                    `;
-                    scheduleBody.appendChild(row);
-                });
-            }
-        }
-        
-        function filterQuestions() {
-            const filterSelect = document.getElementById('filter-materia');
-            const selectedMateria = filterSelect.value;
-            if (selectedMateria === 'Todas') {
-                displayQuestions(questions);
-            } else {
-                const filtered = questions.filter(q => q.materia === selectedMateria);
-                displayQuestions(filtered);
-            }
-        }
-        
-        function populateFilter() {
-            const filterSelect = document.getElementById('filter-materia');
-            const materias = [...new Set(questions.map(q => q.materia))];
-            filterSelect.innerHTML = '<option value="Todas">Todas as matérias</option>';
-            materias.forEach(m => {
-                const option = document.createElement('option');
-                option.value = m;
-                option.textContent = m;
-                filterSelect.appendChild(option);
-            });
-            filterSelect.addEventListener('change', filterQuestions);
-        }
-        
         function startSimulado() {
             showScreen('simulado-questions');
-            currentSimuladoQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10); // 10 questões aleatórias
+            currentSimuladoQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
             currentSimuladoIndex = 0;
+            userSimuladoAnswers = {};
             simuladoTimer = 0;
             document.getElementById('simulado-timer').textContent = '00:00';
             
@@ -581,141 +302,133 @@
             
             displaySimuladoQuestion();
         }
-        
+
         function displaySimuladoQuestion() {
             const container = document.getElementById('simulado-question-container');
-            container.innerHTML = '';
-            const q = currentSimuladoQuestions[currentSimuladoIndex];
+            const status = document.getElementById('simulado-status');
+            const question = currentSimuladoQuestions[currentSimuladoIndex];
             
-            const qElement = document.createElement('div');
-            qElement.className = 'card p-6';
-            qElement.innerHTML = `
-                <h4 class="font-semibold text-xl text-gray-800 mb-4">Questão ${currentSimuladoIndex + 1} de ${currentSimuladoQuestions.length}</h4>
-                <p class="mb-4">${q.enunciado}</p>
-                <div class="space-y-2">
-                    ${q.alternativas.map((alt, index) => `
-                        <button onclick="checkSimuladoAnswer(${index}, this)" class="btn-secondary w-full py-2 px-4 text-left">
-                            ${alt}
-                        </button>
-                    `).join('')}
-                </div>
+            status.textContent = `Questão ${currentSimuladoIndex + 1} de ${currentSimuladoQuestions.length}`;
+            
+            container.innerHTML = `
+                <p class="text-sm text-gray-500 mb-2">${question.materia}</p>
+                <p class="text-lg font-semibold mb-4">${question.enunciado}</p>
+                <ul class="space-y-2 mb-4">
+                    ${question.alternativas.map((alt, index) => `<li class="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100" data-index="${index}" onclick="selectSimuladoAnswer(${index}, this)">
+                        <span class="w-6 h-6 flex items-center justify-center border rounded-full text-sm">${String.fromCharCode(65 + index)}</span>
+                        <span>${alt}</span>
+                    </li>`).join('')}
+                </ul>
             `;
-            container.appendChild(qElement);
-        }
-        
-        function checkSimuladoAnswer(selectedIndex, button) {
-            const q = currentSimuladoQuestions[currentSimuladoIndex];
-            const isCorrect = selectedIndex === q.correta;
-            q.userAnswer = selectedIndex;
             
-            button.parentElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            updateSimuladoButtons();
             
-            if (isCorrect) {
-                button.classList.remove('btn-secondary');
-                button.classList.add('btn-correct');
-            } else {
-                button.classList.remove('btn-secondary');
-                button.classList.add('btn-incorrect');
-                const correctButton = button.parentElement.children[q.correta];
-                correctButton.classList.remove('btn-secondary');
-                correctButton.classList.add('btn-correct');
+            if (userSimuladoAnswers[currentSimuladoIndex] !== undefined) {
+                const selected = container.querySelector(`[data-index="${userSimuladoAnswers[currentSimuladoIndex]}"]`);
+                if (selected) selected.classList.add('bg-blue-200');
             }
-            
-            setTimeout(() => {
-                currentSimuladoIndex++;
-                if (currentSimuladoIndex < currentSimuladoQuestions.length) {
-                    displaySimuladoQuestion();
-                } else {
-                    finishSimulado();
-                }
-            }, 1500);
         }
         
+        function selectSimuladoAnswer(answerIndex, element) {
+            userSimuladoAnswers[currentSimuladoIndex] = answerIndex;
+            const container = document.getElementById('simulado-question-container');
+            container.querySelectorAll('li').forEach(li => li.classList.remove('bg-blue-200'));
+            element.classList.add('bg-blue-200');
+        }
+        
+        function prevSimuladoQuestion() {
+            if (currentSimuladoIndex > 0) {
+                currentSimuladoIndex--;
+                displaySimuladoQuestion();
+            }
+        }
+        
+        function nextSimuladoQuestion() {
+            if (currentSimuladoIndex < currentSimuladoQuestions.length - 1) {
+                currentSimuladoIndex++;
+                displaySimuladoQuestion();
+            } else {
+                finishSimulado();
+            }
+        }
+        
+        function updateSimuladoButtons() {
+            document.getElementById('prev-simulado-btn').disabled = currentSimuladoIndex === 0;
+            const nextBtn = document.getElementById('next-simulado-btn');
+            if (currentSimuladoIndex === currentSimuladoQuestions.length - 1) {
+                nextBtn.textContent = 'Finalizar Simulado';
+            } else {
+                nextBtn.textContent = 'Próxima';
+            }
+        }
+
         function finishSimulado() {
             clearInterval(simuladoInterval);
-            showScreen('simulado-results');
-            
-            let correctCount = 0;
-            currentSimuladoQuestions.forEach(q => {
-                if (q.userAnswer === q.correta) {
-                    correctCount++;
-                }
-            });
-            
-            const score = document.getElementById('simulado-score');
-            score.textContent = `${correctCount} / ${currentSimuladoQuestions.length}`;
-            
-            const feedback = document.getElementById('simulado-feedback');
-            if (correctCount >= 8) {
-                feedback.textContent = 'Excelente! Você está no caminho certo.';
-            } else if (correctCount >= 5) {
-                feedback.textContent = 'Bom resultado! Continue estudando os pontos de melhoria.';
-            } else {
-                feedback.textContent = 'Não desanime! Use os erros para focar na sua próxima sessão de estudo.';
-            }
-            
-            const errorsContainer = document.getElementById('simulado-errors-container');
-            errorsContainer.innerHTML = '';
+            let correctAnswers = 0;
             currentSimuladoQuestions.forEach((q, index) => {
-                if (q.userAnswer !== q.correta) {
-                    const errorElement = document.createElement('div');
-                    errorElement.className = 'card p-4 border-l-4 border-red-500';
-                    errorElement.innerHTML = `
-                        <h4 class="font-semibold mb-2">Questão ${index + 1}: ${q.materia}</h4>
-                        <p class="text-sm">${q.enunciado}</p>
-                        <p class="text-sm mt-2"><span class="font-semibold">Correção:</span> ${q.correcao}</p>
-                    `;
-                    errorsContainer.appendChild(errorElement);
-                    userStats.errors.push(q);
+                if (userSimuladoAnswers[index] === q.correta) {
+                    correctAnswers++;
                 }
             });
-            updateStats();
-            saveState();
-        }
+            const resultText = document.getElementById('result-text');
+            const correctCount = document.getElementById('correct-count');
+            const wrongCount = document.getElementById('wrong-count');
+            const total = currentSimuladoQuestions.length;
 
-        // Funções para salvar e carregar o estado
-        function saveState() {
-            localStorage.setItem('userStats', JSON.stringify(userStats));
-        }
-
-        function loadState() {
-            const savedStats = localStorage.getItem('userStats');
-            if (savedStats) {
-                userStats = JSON.parse(savedStats);
+            if (correctAnswers >= total * 0.7) {
+                resultText.textContent = 'Parabéns, você foi muito bem!';
+                resultText.className = 'text-2xl font-bold mb-4 text-green-600';
+            } else {
+                resultText.textContent = 'Continue estudando para melhorar!';
+                resultText.className = 'text-2xl font-bold mb-4 text-red-600';
             }
-            updateStats();
+
+            correctCount.textContent = `Acertos: ${correctAnswers}`;
+            wrongCount.textContent = `Erros: ${total - correctAnswers}`;
+
+            showScreen('simulado-result');
         }
 
-        function getRandomQuote() {
-            const quoteEl = document.getElementById('motivational-quote').querySelector('p');
-            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-            quoteEl.textContent = `"${randomQuote}"`;
+        function displaySchedule() {
+            const container = document.getElementById('cronograma-container');
+            container.innerHTML = '';
+            const daysOfWeek = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            daysOfWeek.forEach(day => {
+                if (schedule[day]) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'mb-6';
+                    dayElement.innerHTML = `
+                        <h3 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">${day.charAt(0).toUpperCase() + day.slice(1)}</h3>
+                        <ul class="space-y-2">
+                            ${schedule[day].map(item => `
+                                <li class="bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-gray-800">${item.time} - ${item.activity}</p>
+                                        <p class="text-sm text-gray-500">${item.focus}</p>
+                                    </div>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `;
+                    container.appendChild(dayElement);
+                }
+            });
         }
-        
-        // Inicialização da aplicação
+
+        function displayWritingContent() {
+            const temasContainer = document.getElementById('redacao-temas');
+            const modelosContainer = document.getElementById('redacao-modelos');
+            temasContainer.innerHTML = writingThemes.map(tema => `<li>${tema}</li>`).join('');
+            modelosContainer.innerHTML = writingModels.map(modelo => `<li>${modelo}</li>`).join('');
+        }
+
+        // Exibe a tela inicial ao carregar
         document.addEventListener('DOMContentLoaded', () => {
+            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            document.getElementById('motivational-quote').textContent = randomQuote;
             showScreen('home-screen');
-            getRandomQuote();
-            loadState();
-            displayLessons();
-            displayQuestions(questions);
-            displayWritingThemes();
-            displaySchedule();
-            populateFilter();
         });
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-              .then(registration => {
-                console.log('Service Worker registrado com sucesso:', registration);
-              })
-              .catch(error => {
-                console.error('Falha ao registrar o Service Worker:', error);
-              });
-          });
-        }
+
     </script>
 </body>
 </html>
